@@ -25,20 +25,18 @@ class GenericRuntime:
     def __init__(
         self,
         global_dict: Optional[dict] = None,
-        local_dict: Optional[dict] = None,
         headers: list = [],
     ):
         self._global_vars = copy.copy(global_dict) if global_dict else {}
-        self._local_vars = copy.copy(local_dict) if local_dict else {}
 
         for c in headers:
             self.exec_code(c)
 
     def exec_code(self, code_piece: str) -> None:
-        exec(code_piece, self._global_vars, self._local_vars)
+        exec(code_piece, self._global_vars, self._global_vars)
 
     def eval_code(self, expr: str) -> Any:
-        return eval(expr, self._global_vars, self._local_vars)
+        return eval(expr, self._global_vars, self._global_vars)
 
 
 class PythonInterpreter(BaseTool):
@@ -73,5 +71,5 @@ class PythonInterpreter(BaseTool):
 
     def _call(self, command: str) -> Any:
         runtime = GenericRuntime()
-        runtime.exec_code('\n'.join(command))
+        runtime.exec_code(command)
         return runtime.eval_code(self.answer_expr)

@@ -57,8 +57,7 @@ class BaseTool(metaclass=ABCMeta):
             override.name = cls.__name__
 
         if override.description is None:
-            doc = (cls.default_desc or '').partition('\n\n')[0].replace('\n', ' ')
-            override.description = doc.strip()
+            override.description = (cls.default_desc or '').strip()
 
         return extract_toolmeta(cls.apply, override=override)
 

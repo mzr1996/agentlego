@@ -30,8 +30,7 @@ class ObjectRemove(BaseTool):
     @require('diffusers')
     def __init__(self,
                  sam_model: str = 'sam_vit_h_4b8939.pth',
-                 grounding_model: str = 'glip_atss_swin-t_a'
-                 '_fpn_dyhead_pretrain_obj365',
+                 grounding_model: str = 'glip_atss_swin-l_fpn_dyhead_pretrain_mixeddata',
                  device: str = 'cuda',
                  toolmeta=None):
         super().__init__(toolmeta)

@@ -1,6 +1,5 @@
 import copy
 import inspect
-from types import NoneType
 from typing import Callable, Optional, Tuple, Union
 
 from typing_extensions import Annotated, get_args, get_origin
@@ -23,7 +22,7 @@ def get_input_parameters(func: Callable) -> Tuple[Parameter, ...]:
                     info = item
             annotation = get_args(annotation)[0]
         if get_origin(annotation) is Union:
-            types = [i for i in get_args(annotation) if i is not NoneType]
+            types = [i for i in get_args(annotation) if i is not type(None)]
             assert len(types) == 1, (f'The union type of input `{p.name}` in '
                                      f'`{func.__qualname__}` is not supported.')
             annotation = types[0]

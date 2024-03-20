@@ -19,15 +19,24 @@ class TextToImage(BaseTool):
                     'input text.')
 
     @require('diffusers')
-    def __init__(self, model: str = 'sd', device: str = 'cuda', toolmeta=None):
+    def __init__(
+        self,
+        model: str = 'sdxl',
+        num_inference_steps: int = 30,
+        device: str = 'cuda',
+        toolmeta=None,
+    ):
         super().__init__(toolmeta=toolmeta)
-        assert model in ['sd', 'sdxl']
+        assert model in ['sd', 'sdxl', 'sdxl-turbo']
         self.model = model
         self.device = device
+        self.num_inference_steps = num_inference_steps
 
     def setup(self):
         if self.model == 'sdxl':
             self.pipe = load_sdxl(device=self.device)
+        elif self.model == 'sdxl-turbo':
+            self.pipe = load_sdxl(model='stabilityai/sdxl-turbo', vae=None, device=self.device)
         elif self.model == 'sd':
             self.pipe = load_sd(device=self.device)
         self.a_prompt = 'best quality, extremely detailed'
@@ -38,12 +47,28 @@ class TextToImage(BaseTool):
     def apply(
         self,
         keywords: Annotated[str,
-                            Info('A series of English keywords separated by comma.')],
+                            Info('A series of keywords separated by comma.')],
     ) -> ImageIO:
+
+        from urllib.parse import quote_plus
+
+        import requests
+        import langid
+
+        langid.set_languages(['zh', 'en'])
+        lang = langid.classify(keywords)[0]
+        lang = 'zh-CN' if lang == 'zh' else lang
+        if lang == 'zh-CN':
+            keywords = quote_plus(keywords)
+            url_tmpl = ('https://translate.googleapis.com/translate_a/'
+                        'single?client=gtx&sl={}&tl={}&dt=at&dt=bd&dt=ex&'
+                        'dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&q={}')
+            response = requests.get(url_tmpl.format('zh-CN', 'en', keywords), timeout=10).json()
+            keywords = ''.join(x[0] for x in response[0] if x[0] is not None)
         prompt = f'{keywords}, {self.a_prompt}'
         image = self.pipe(
             prompt,
-            num_inference_steps=30,
+            num_inference_steps=self.num_inference_steps,
             negative_prompt=self.n_prompt,
         ).images[0]
         return ImageIO(image)

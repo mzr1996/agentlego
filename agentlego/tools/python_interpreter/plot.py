@@ -66,7 +66,7 @@ class Plot(BaseTool):
         from matplotlib.pyplot import Figure
 
         runtime = GenericRuntime(headers=['import matplotlib.pyplot as plt'])
-        runtime.exec_code('\n'.join(command))
+        runtime.exec_code(command)
         figure: Figure = runtime.eval_code(self.answer_expr)
         if not isinstance(figure, Figure):
             raise TypeError('The `solution` function must return the matplotlib figure.')

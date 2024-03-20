@@ -60,5 +60,5 @@ class Solver(BaseTool):
 
     def _call(self, command: str) -> str:
         runtime = GenericRuntime(headers=['from sympy import symbols, Eq, solve'])
-        runtime.exec_code('\n'.join(command))
+        runtime.exec_code(command)
         return runtime.eval_code(self.answer_expr)

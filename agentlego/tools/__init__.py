@@ -9,8 +9,7 @@ from .image_pose import HumanBodyPose, HumanFaceLandmark, PoseToImage
 from .image_scribble import ImageToScribble, ScribbleTextToImage
 from .image_text import ImageDescription, ImageRegionDescription, TextToImage
 from .imagebind import AudioImageToImage, AudioTextToImage, AudioToImage, ThermalToImage
-from .object_detection import (CelebrityRecognition, CountGivenObject, ObjectDetection,
-                               TextToBbox)
+from .object_detection import CountGivenObject, ObjectDetection, TextToBbox
 from .ocr import OCR, MathOCR
 from .python_interpreter import Plot, PythonInterpreter, Solver
 from .search import GoogleSearch
@@ -29,5 +28,5 @@ __all__ = [
     'SpeechToText', 'TextToSpeech', 'Translation', 'GoogleSearch', 'Calculator',
     'BaseTool', 'make_tool', 'AddText', 'DrawBox', 'ImageRegionDescription',
     'CountGivenObject', 'ReplaceBackgroundOrForeground', 'MathOCR', 'PythonInterpreter',
-    'Plot', 'Solver', 'CelebrityRecognition'
+    'Plot', 'Solver'
 ]
